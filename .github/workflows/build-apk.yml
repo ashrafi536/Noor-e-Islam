@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Setup Java
@@ -27,28 +27,19 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
-      - name: Generate Android project files
-        run: flutter create --platforms=android --org com.nooreislam --project-name noor_e_islam .
-
-      - name: Align Java and Kotlin targets
+      - name: Check Flutter project
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path("android/app/build.gradle")
-          if p.exists():
-              s = p.read_text()
-              s = s.replace("JavaVersion.VERSION_11", "JavaVersion.VERSION_17")
-              s = s.replace('jvmTarget = "11"', 'jvmTarget = "17"')
-              s = s.replace("jvmTarget = '11'", "jvmTarget = '17'")
-              p.write_text(s)
-              print("Java/Kotlin target check completed")
-          else:
-              raise SystemExit("android/app/build.gradle not found")
-          PY
+          test -f pubspec.yaml
+          test -f lib/main.dart
+          flutter --version
 
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Analyze project
+        run: flutter analyze --no-pub
 
       - name: Build debug APK
         run: flutter build apk --debug
@@ -56,7 +47,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Noor-e-Islam-debug-APK
+          name: Noor-e-Islam-APK
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 7
