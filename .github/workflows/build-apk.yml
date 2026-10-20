@@ -2,10 +2,10 @@
 name: Build Noor-e-Islam APK
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,7 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -30,8 +29,8 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Check Flutter version
-        run: flutter --version
+      - name: Generate Android project files
+        run: flutter create --platforms=android --org com.nooreislam --project-name noor_e_islam .
 
       - name: Get dependencies
         run: flutter pub get
@@ -39,7 +38,7 @@ jobs:
       - name: Build debug APK
         run: flutter build apk --debug
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Noor-e-Islam-debug-APK
