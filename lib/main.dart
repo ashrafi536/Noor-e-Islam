@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const NoorEIslamApp());
 }
 
@@ -15,19 +16,14 @@ class NoorEIslamApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Noor-e-Islam',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: background,
         colorScheme: ColorScheme.fromSeed(
           seedColor: emerald,
           brightness: Brightness.dark,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: background,
-          foregroundColor: Colors.white,
-          elevation: 0,
         ),
         useMaterial3: true,
       ),
@@ -46,7 +42,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
 
-  final List<Map<String, dynamic>> features = [
+  final List<Map<String, Object>> features = [
     {'icon': Icons.access_time, 'title': 'Namaz Times'},
     {'icon': Icons.explore, 'title': 'Qibla Compass'},
     {'icon': Icons.calendar_month, 'title': 'Hijri Calendar'},
@@ -57,10 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
     {'icon': Icons.check_circle_outline, 'title': 'Good Deeds'},
   ];
 
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: background,
         title: const Row(
           children: [
             Icon(Icons.mosque, color: gold, size: 30),
@@ -68,19 +71,15 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'Noor-e-Islam',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
                 color: gold,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Settings coming soon')),
-              );
-            },
+            onPressed: () => showMessage('Settings coming soon'),
             icon: const Icon(Icons.settings_outlined),
           ),
         ],
@@ -93,10 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF065F46), Color(0xFF064E3B)],
+                  colors: [Color(0xFF065F46), emerald],
                 ),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: gold.withValues(alpha: 0.6)),
+                border: Border.all(
+                  color: gold.withOpacity(0.6),
+                ),
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: features.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 13,
                 mainAxisSpacing: 13,
@@ -159,29 +161,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 final feature = features[index];
                 return InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '${feature['title']} will be added in the next steps.',
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: () => showMessage(
+                    '${feature['title']} will be added in the next steps.',
+                  ),
                   child: Container(
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                       color: const Color(0xFF10251D),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: gold.withValues(alpha: 0.35),
+                        color: gold.withOpacity(0.35),
                       ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(feature['icon'] as IconData,
-                            color: gold, size: 34),
+                        Icon(
+                          feature['icon'] as IconData,
+                          color: gold,
+                          size: 34,
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           feature['title'] as String,
@@ -214,12 +213,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: (index) {
           setState(() => selectedIndex = index);
           if (index != 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  '${['Home', 'Worship', 'Calendar', 'Profile'][index]} section will be developed next.',
-                ),
-              ),
+            showMessage(
+              '${['Home', 'Worship', 'Calendar', 'Profile'][index]} '
+              'section will be developed next.',
             );
           }
         },
@@ -246,4 +242,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
