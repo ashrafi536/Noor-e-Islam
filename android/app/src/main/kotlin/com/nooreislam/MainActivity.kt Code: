@@ -4,3 +4,9 @@ package com.nooreislam
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : FlutterActivity()
+
+package com.nooreislam
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
