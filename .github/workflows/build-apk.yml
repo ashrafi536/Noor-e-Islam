@@ -33,18 +33,7 @@ steps:
 
   - name: Generate Android project files
     run: flutter create --platforms=android --org com.nooreislam --project-name noor_e_islam .
-      - name: Fix Java Kotlin JVM targets
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path("android/app/build.gradle")
-          s = p.read_text()
-          s = s.replace("JavaVersion.VERSION_11", "JavaVersion.VERSION_17")
-          s = s.replace('jvmTarget = "11"', 'jvmTarget = "17"')
-          s = s.replace("jvmTarget = '11'", "jvmTarget = '17'")
-          p.write_text(s)
-          print("Java/Kotlin target updated")
-          PY
+      
   - name: Get dependencies
     run: flutter pub get
 
