@@ -1,6 +1,6 @@
 name: Build Noor-e-Islam APK
 
-on:
+'on':
 push:
 branches:
 - main
@@ -29,11 +29,12 @@ steps:
       channel: stable
       cache: true
 
-  - name: Generate Android platform files
+  - name: Create fresh Android project
     run: |
-      flutter create --platforms=android --org com.nooreislam --project-name noor_e_islam .
+      rm -rf android
+      flutter create --platforms=android --org com --project-name nooreislam .
 
-  - name: Check Flutter project
+  - name: Check project files
     run: |
       test -f pubspec.yaml
       test -f lib/main.dart
